@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract PreciousCoin is ERC20, Ownable {
+contract MainCoin is ERC20, Ownable {
 
   constructor (string memory name, string memory symbol) ERC20(name, symbol) {
     _mint(_msgSender(), 300000000 * 1e18);

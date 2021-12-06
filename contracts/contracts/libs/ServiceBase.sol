@@ -8,7 +8,6 @@ contract ServiceBase {
 
   constructor(MainPool _poolAddress) {
     pool = MainPool(_poolAddress);
-    pool.registerService(address(this));
   }
 
 }
