@@ -16,3 +16,30 @@ Currently, the best UI for dApp is web UI. Therefore I include a react web proje
 Now you have a full test cahin on your own machine.
 
 You may deploy contracts to the test chain, and navigate all changes on the test chain by using Ganache Console.
+
+### Part I: Contract Development
+
+1. Install node modules.
+
+  ```
+  $ cd contracts
+  $ yarn install
+  ```
+
+2. Run develop environment.
+
+  ```
+  $ truffle develop
+  ```
+
+For more details about contract development, please checkout [Truffle Quick Start Guide](https://trufflesuite.com/docs/truffle/quickstart.html).
+
+
+### Part II: Web Development
+
+NOT AVAILABLE YET
+
+
+### Part III: Cloud Development
+
+NOT AVAILABLE YET

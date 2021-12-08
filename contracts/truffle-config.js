@@ -24,9 +24,14 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const fs = require('fs');
 
 const provider = (secretFilePath, providerUrl) => {
-  const mnemonic = fs.readFileSync(secretFilePath).toString().trim();
-  const provider = new HDWalletProvider(mnemonic, providerUrl);
-  return provider;
+  try{
+    const mnemonic = fs.readFileSync(secretFilePath).toString().trim();
+    const provider = new HDWalletProvider(mnemonic, providerUrl);
+    return provider;
+  }catch{
+    console.error(`Unable to create provider for ${providerUrl}.Please provide your mnemonic in a text file named as .secret.`)
+    return null;
+  }
 }
 
 module.exports = {
