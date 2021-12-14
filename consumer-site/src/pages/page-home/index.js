@@ -1,13 +1,16 @@
+import React, { useState, useCallback } from 'react';
 import { PageBase } from "../../components/page-base";
-import { Box, Container, Grid, Button, Typography } from "@mui/material";
-
-const Section = ({sx, children}) =>
-  <Box sx={{
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center',
-    ...sx,
-  }}>{children}</Box>
+import { Section } from '../../components/section';
+import { 
+  Box, Container, Grid, Button, Typography, 
+  Card, CardHeader, CardContent, 
+  List, ListItem, ListItemText, CardActions, CardMedia 
+} from "@mui/material";
+import { useWallet } from "use-wallet";
+import { useContract } from '../../components/hooks';
+import { useEffect } from "react";
+import MainCoin from '../../contracts/MainCoin.json';
+import MainPool from '../../contracts/MainPool.json';
 
 const NftCard = ({sx}) =>
   <Box sx={{
@@ -21,12 +24,63 @@ const NftCard = ({sx}) =>
   }}>&nbsp;</Box>
 
 export const PageHome = () => {
+  const wallet = useWallet();
+  const { web3, contract: contractCoin } = useContract(MainCoin);
+  const { contract: contractPool } = useContract(MainPool);
+  const [ stakingInfo, setStakingInfo ] = useState({staked: '0', earned: '0'});
+  const stake = useCallback(async () => {
+    try{
+      let amt = web3.utils.toWei('1','ether');
+      await contractCoin.methods
+        .approve(contractPool.options.address, amt)
+        .send({from:wallet.account});
+      await contractPool.methods
+        .stake(amt)
+        .send({from:wallet.account});
+    }catch(err){
+      alert(err.message);
+    }
+  }, [wallet, web3, contractPool]);
+  const unstake = useCallback(async () => {
+    try{
+      let amt = web3.utils.toWei('1','ether');
+      await contractPool.methods
+        .unstake(amt)
+        .send({from:wallet.account});
+    }catch(err){
+      alert(err.message);
+    }
+  }, [wallet, contractPool])
+
+  useEffect(()=>{
+    if(!wallet || !wallet.account || !contractPool) return;
+
+    (async () => {
+      try{
+        let staked = await contractPool.methods.balanceOf(wallet.account).call();
+        let earned = await contractPool.methods.earned(wallet.account).call();
+        setStakingInfo({staked, earned});
+      }catch(err){
+        console.error(err);
+      }
+      
+    })();
+
+  }, [setStakingInfo, wallet, contractPool]);
+
 
   return (
-    <PageBase navProps={{title:"Gamberverse"}}>
+    <PageBase navProps={{title:"Gamberverse"}} sx={{
+      background: 'url(https://cdn.wallpapersafari.com/33/22/I6KywG.jpg)',
+      backgroundSize: 'cover',
+      backgroundAttachment: 'fixed',
+      }}>
+
       <Section sx={{
-        minHeight: '500px',
+        minHeight: '100vh',
         background: 'url(https://wallpapercave.com/wp/wp10343417.jpg)',
+        backgroundSize: '300% 300%',
+        opacity: .85,
         }}>
         <Container>
           <Grid container>
@@ -43,7 +97,8 @@ export const PageHome = () => {
                 <br/>
                 <Button 
                   variant="contained" 
-                  color="primary">
+                  color="primary"
+                  onClick={()=>wallet.connect()}>
                     Get Involved!
                 </Button>
               </Typography>
@@ -53,12 +108,37 @@ export const PageHome = () => {
         </Container>
       </Section>
 
+      { wallet.isConnected() &&
+
+        <Section sx={{p: 4}}>
+          <Container>
+
+            <Grid container>
+              <Grid item md={4}>
+
+                <Card>
+                  <CardMedia 
+                    component="img" 
+                    image="https://qph.fs.quoracdn.net/main-qimg-be8fc26693f76dc98e580fd1112749e9" />
+                  <CardContent>
+                    {web3.utils.fromWei(stakingInfo.staked)} Staked, {web3.utils.fromWei(stakingInfo.earned)} Earned.
+                  </CardContent>
+                  <CardActions>
+                    <Button onClick={stake}>Stake</Button>
+                    <Button onClick={unstake}>Unstake</Button>
+                  </CardActions>
+                </Card>
+
+              </Grid>
+            </Grid>
+
+          </Container>
+        </Section>
+      }
+
       <Section sx={{
         minHeight: '500px',
-        background: 'url(https://cdn.wallpapersafari.com/33/22/I6KywG.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center center',
-        backgroundAttachment: 'fixed',
+        background: 'rgba(0,0,255,0.2)',
         }}>
         <Container>
           <Grid container>
@@ -79,7 +159,7 @@ export const PageHome = () => {
 
       <Section sx={{
         p: 2,
-        background: 'url(https://media.giphy.com/media/ik2KBT1a6IUvu/giphy.gif)',
+        background: 'transparent url(https://media.giphy.com/media/ik2KBT1a6IUvu/giphy.gif)',
         backgroundSize: 'cover',
         }}>
         <Container>
@@ -114,25 +194,6 @@ export const PageHome = () => {
           
         </Container>
       </Section>
-
-      <Section sx={{
-        minHeight: '200px',
-        color: 'silver',
-        background: '#444',
-      }}>
-        <Container>
-          <Typography variant="body1" align="center">
-            Service Policy | Privacy | White Paper<br/><br/><br/><br/>
-          </Typography>
-          <Typography variant="h6" align="center">
-            GAMBERVERSE
-          </Typography>
-          <Typography variant="body2" align="center">
-            &copy; 2022 Gamberverse
-          </Typography>
-        </Container>
-      </Section>
-
 
     </PageBase>
   );

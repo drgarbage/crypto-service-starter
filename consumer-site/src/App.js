@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PageHome } from './pages/page-home';
 import { PageGameHome } from './pages/page-game-home';
 import { PageNftHome} from './pages/page-nft-home';
+import { PageAdmin } from './pages/page-admin';
+import { PageAmazonPublisher } from './pages/page-amazon-publisher';
 import { grey, deepOrange } from '@mui/material/colors';
 
 const theme = createTheme({
@@ -31,6 +33,8 @@ function App() {
           <Route path="/" element={<PageHome />} />
           <Route path="/game" element={<PageGameHome />} />
           <Route path="/nft" element={<PageNftHome />} />
+          <Route path="/nft-amazon" element={<PageAmazonPublisher />} />
+          <Route path="/admin" element={<PageAdmin />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
@@ -39,7 +43,7 @@ function App() {
 
 export default () => (
   <UseWalletProvider
-    chainId={97}>
+    chainId={5777}>
     <App />
   </UseWalletProvider>
 );
