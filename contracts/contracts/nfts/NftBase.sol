@@ -18,13 +18,14 @@ contract NftBase is ERC721, Ownable {
     return _exists(tokenId);
   }
 
-  function mint(address owner) public onlyOwner {
+  function mint(address owner) public onlyOwner returns (uint256) {
     uint256 tokenId = _latestTokenID + 1;
     _mint(owner, tokenId);
     _latestTokenID = tokenId;
+    return tokenId;
   }
 
-  function batchMint(address[] memory owners) public onlyOwner {
+  function batchMint(address[] memory owners) public onlyOwner returns (uint256) {
     uint256 beginToken = _latestTokenID + 1;
     for(uint i = 0; i < owners.length; i++) {
       address addr = owners[i];
@@ -32,6 +33,7 @@ contract NftBase is ERC721, Ownable {
       _mint(addr, tokenId);
     }
     _latestTokenID = beginToken + owners.length - 1;
+    return beginToken + owners.length;
   }
 
   function burn(uint256 tokenId) public onlyOwner {
