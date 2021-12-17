@@ -65,14 +65,13 @@ contract NftMarket is ServiceBase {
 
   function book(address nftContract, uint256 tokenId, uint256 price) public returns (bytes32) {
     require(IERC721(nftContract).ownerOf(tokenId) == msg.sender, "Callee doesn't own this token");
+    require(IERC721(nftContract).getApproved(tokenId) == address(this), "Not having approval of this token.");
 
     bytes32 bookId = index(nftContract, tokenId);
     books[bookId].nftContract = nftContract;
     books[bookId].tokenId = tokenId;
     books[bookId].price = price;
     books[bookId].stamp = block.timestamp;
-
-    IERC721(nftContract).approve(address(this), tokenId);
 
     emit Booked(bookId, msg.sender, price);
 
