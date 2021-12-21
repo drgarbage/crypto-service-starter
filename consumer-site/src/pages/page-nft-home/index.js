@@ -3,9 +3,10 @@ import { PageBase } from "../../components/page-base";
 import { Section } from "../../components/section";
 import { useContract } from "../../components/hooks";
 import { NftMarketContext, NftMarketInitial, NftMarketReducer } from "../../context/nft-market";
-import { Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Container, IconButton, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Container, IconButton, Typography, Grid } from '@mui/material';
 import Web3 from 'web3';
 import NftMarket from '../../contracts/NftMarket.json';
+import NftAmazons from '../../contracts/NftAmazons.json';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 // Book {
@@ -41,14 +42,22 @@ const NftCard = ({book}) =>
 export const PageNftHome = () => {
   const [market, dispatchMarket] = useReducer(NftMarketReducer, NftMarketInitial);
   const {contract} = useContract(NftMarket);
+  const {contract:contractAmazons} = useContract(NftAmazons);
   
   useEffect(()=>{
     if(!contract) return;
     (async () => {
-      let evts = await contract.getPastEvents("Booked");
-      let bookIds = evts.map(evt => evt.returnValues.bookId);
-      let skus = await Promise.all(bookIds.map(id => contract.methods.books[id].call()));
-      dispatchMarket("UPDATE_SKUS", { skus });
+      let evts = await contract.getPastEvents("Booked", {fromBlock:'earliest'});
+      evts = evts.map(evt => evt.returnValues);
+      let skus = [];
+      for (const evt of evts) {
+        let book = await contract.methods.books(evt.bookId).call();
+        let metaUrl = await contractAmazons.methods.tokenURI(book.tokenId).call();
+        let rs = await fetch(metaUrl);
+        let meta = await rs.json();
+        skus.push({...book, bookId:evt.bookId, seller: evt.seller, meta})
+      }
+      dispatchMarket({type:"UPDATE_SKUS",payload: { skus }});
     })();
   }, [contract]);
   
@@ -58,19 +67,17 @@ export const PageNftHome = () => {
       <PageBase navProps={{title:"Gamberverse"}}>
         <Section sx={{p:2, backgroundColor: 'white'}}>
 
-         <Box sx={{
-            display: 'flex', 
-            flexDirection: 'row',
-            justifyContent: 'center',
-            }}>
+         <Grid container direction="row" justifyContent="center">
             <NftMarketContext.Consumer>
               { ({market}) => 
                 market.skus && Object.values(market.skus).map(
-                  sku => <NftCard key={`${sku.nftContract}/${sku.tokenId}`} book={sku} />
+                  sku => <Grid item md="4">
+                    <NftCard key={`${sku.nftContract}/${sku.tokenId}`} book={sku} />
+                  </Grid>
                 )
               }
             </NftMarketContext.Consumer>
-          </Box>
+          </Grid>
 
         </Section>
       </PageBase>

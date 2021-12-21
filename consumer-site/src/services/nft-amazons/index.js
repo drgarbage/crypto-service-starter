@@ -3,12 +3,13 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyAbnoFWEHGEz8ZZbfHQAzfAl5YCovjjATo",
-  authDomain: "crypto-service-starter.firebaseapp.com",
-  projectId: "crypto-service-starter",
-  storageBucket: "crypto-service-starter.appspot.com",
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MSG_SENDER_ID || "267559044017",
-  appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:267559044017:web:bcb105da2a8b5850b93390"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyBvAKWcZ_3d17NgKRD5hV50C6Jcah6Wy-s",
+  authDomain: "bemaster-3de27.firebaseapp.com",
+  projectId: "bemaster-3de27",
+  storageBucket: "bemaster-3de27.appspot.com",
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MSG_SENDER_ID || "643018371266",
+  appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:643018371266:web:5733874f8c2e60d8f78b5b",
+  measurementId: "G-0L9GF8VDW8"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -27,7 +28,6 @@ export const publish = async (context, image, meta) => {
   let tokenId = events.Transfer.returnValues.tokenId;
     
   meta.tokenId = tokenId;
-  
   // upload image
   let snapImg = await firebase
     .storage()
@@ -44,4 +44,17 @@ export const publish = async (context, image, meta) => {
     .set(meta, {merge:true});
 
   return meta;
+}
+
+export const publishAndBook = async (context, image, meta, price) => {
+  let { wallet, web3, contract, marketContract} = context;
+
+  let publishedMeta = await publish(context, image, meta);
+  await contract.methods.approve(marketContract.options.address, publishedMeta.tokenId)
+    .send({from:wallet.account});
+  let book = await marketContract.methods
+    .book(contract.options.address, publishedMeta.tokenId, web3.utils.toWei(price))
+    .send({from:wallet.account});
+  
+  return book;
 }
