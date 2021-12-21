@@ -3,13 +3,12 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyBvAKWcZ_3d17NgKRD5hV50C6Jcah6Wy-s",
-  authDomain: "bemaster-3de27.firebaseapp.com",
-  projectId: "bemaster-3de27",
-  storageBucket: "bemaster-3de27.appspot.com",
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MSG_SENDER_ID || "643018371266",
-  appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:643018371266:web:5733874f8c2e60d8f78b5b",
-  measurementId: "G-0L9GF8VDW8"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyAbnoFWEHGEz8ZZbfHQAzfAl5YCovjjATo",
+  authDomain: "crypto-service-starter.firebaseapp.com",
+  projectId: "crypto-service-starter",
+  storageBucket: "crypto-service-starter.appspot.com",
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MSG_SENDER_ID || "267559044017",
+  appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:267559044017:web:bcb105da2a8b5850b93390"
 };
 
 firebase.initializeApp(firebaseConfig);
