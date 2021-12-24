@@ -5,5 +5,5 @@ import "./NftBase.sol";
 
 contract NftAmazons is NftBase {
   constructor() 
-    NftBase("Amazons", "AMZ", "") { }
+    NftBase("Amazons", "AMZ", "https://cloud-service-crypto.herokuapp.com/api/nft-amazon/") { }
 }
