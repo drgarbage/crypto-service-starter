@@ -7,6 +7,7 @@ import { PageGameHome } from './pages/page-game-home';
 import { PageNftHome} from './pages/page-nft-home';
 import { PageAdmin } from './pages/page-admin';
 import { PageAmazonPublisher } from './pages/page-amazon-publisher';
+import { PageCollections } from './pages/page-collections';
 import { grey, deepOrange } from '@mui/material/colors';
 
 const theme = createTheme({
@@ -35,6 +36,7 @@ function App() {
           <Route path="/nft" element={<PageNftHome />} />
           <Route path="/nft-amazon" element={<PageAmazonPublisher />} />
           <Route path="/admin" element={<PageAdmin />} />
+          <Route path="/collections" element={<PageCollections />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

@@ -62,6 +62,8 @@ export const PageNav = ({
 
         <Button onClick={()=>navigate('/game')}>Games</Button>
 
+        <Button onClick={()=>navigate('/collections')}>Collections</Button>
+
         <Button onClick={()=>navigate('/nft')}>NFT</Button>
 
         <Divider sx={{m:2}} orientation="vertical" flexItem />
