@@ -67,15 +67,17 @@ export const PageNftHome = () => {
       <PageBase navProps={{title:"Gamberverse"}}>
         <Section sx={{p:2, backgroundColor: 'white'}}>
 
-         <Grid container direction="row">
-            <NftMarketContext.Consumer>
-              { ({market}) => 
-                market.skus && Object.values(market.skus).map(
-                  sku => <NftCard key={`${sku.nftContract}/${sku.tokenId}`} book={sku} />
-                )
-              }
-            </NftMarketContext.Consumer>
-          </Grid>
+        <Container>
+          <Grid container>
+              <NftMarketContext.Consumer>
+                {({market}) =>
+                  market.skus && Object.values(market.skus).map(
+                    sku => <NftCard key={`${sku.nftContract}/${sku.tokenId}`} book={sku} />
+                  )
+                }
+              </NftMarketContext.Consumer>
+            </Grid>
+        </Container>
 
         </Section>
       </PageBase>
