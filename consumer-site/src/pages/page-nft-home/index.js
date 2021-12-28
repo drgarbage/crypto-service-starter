@@ -9,6 +9,8 @@ import NftMarket from '../../contracts/NftMarket.json';
 import NftAmazons from '../../contracts/NftAmazons.json';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
+const cardWidth = (1152 - 4 * 8 * 3) / 3
+
 // Book {
 //   nftContract,
 //   tokenId,
@@ -17,7 +19,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 //   meta: { name, description, image }
 // }
 const NftCard = ({book}) => 
-  <Card sx={{m:2, maxWidth: 320}}>
+  <Card sx={{m:2, width: cardWidth}}>
     <CardMedia 
       component="img" 
       height="320"
