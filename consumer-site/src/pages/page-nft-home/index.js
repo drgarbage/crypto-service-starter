@@ -1,13 +1,15 @@
 import React, { useReducer, useMemo, useEffect } from 'react';
 import { useWeb3, useContract } from "../../components/hooks";
+import { useWallet } from "use-wallet";
 import { PageBase } from "../../components/page-base";
 import { Section } from "../../components/section";
 import { NftCard } from '../../components/card-nft';
 import { NftMarketContext, NftMarketInitial, NftMarketReducer } from "../../context/nft-market";
 import { Card, CardMedia, Container, Typography, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { listBooks } from '../../services/nft';
+import { buy, listBooks } from '../../services/nft';
 import NftMarket from '../../contracts/NftMarket.json';
+import MainCoin from '../../contracts/MainCoin.json';
 
 // Book {
 //   nftContract,
@@ -20,8 +22,28 @@ import NftMarket from '../../contracts/NftMarket.json';
 export const PageNftHome = () => {
   let { collection } = useParams();
   const [market, dispatchMarket] = useReducer(NftMarketReducer, NftMarketInitial);
+  const wallet = useWallet();
   const web3 = useWeb3();
   const contractMarket = useContract(NftMarket);
+  const contractCoin = useContract(MainCoin);
+  const context = {
+    web3,
+    wallet,
+    market: contractMarket,
+    coin: contractCoin
+  };
+
+
+  const purchase = (book) => {
+    try{
+      if(!wallet.isConnected())
+        throw new Error("Wallet not connected!");
+      buy(context, book);
+      alert('Purchase Success!')
+    } catch(err) {
+        alert(err.message);
+    }
+  }
   
   useEffect(()=>{
     listBooks({web3, market: contractMarket}, {})
@@ -88,7 +110,11 @@ export const PageNftHome = () => {
                 market.skus && Object.values(market.skus).map(
                   sku => 
                   <Grid item xs={4}>
-                    <NftCard key={`${sku.nftContract}/${sku.tokenId}`} book={sku} />
+                    <NftCard 
+                      key={`${sku.nftContract}/${sku.tokenId}`} 
+                      book={sku} 
+                      onPurchase={()=>purchase(sku)}
+                      />
                   </Grid>
                 )
               }

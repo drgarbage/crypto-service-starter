@@ -42,9 +42,12 @@ export const listBooks = async (context, options) => {
       let book = await market.methods.books(evt.bookId).call();
       let nftc = genContract({web3}, book.nftContract, IERC721Metadata);
       let url = await nftc.methods.tokenURI(book.tokenId).call();
+      let owner = await nftc.methods.ownerOf(book.tokenId).call();
+      // todo: add contract meta data
+      let contractMeta = { name: '', image: '' };
       let rsp = await fetch(url);
       let meta = await rsp.json();
-      let info = { ...book, ...evt, meta};
+      let info = { ...book, ...evt, meta, contractMeta, owner};
       skus.push(info);
     }catch(err){
       console.error(err);
@@ -52,4 +55,10 @@ export const listBooks = async (context, options) => {
   }
     
   return skus;
+}
+
+export const buy = async (context, book) => {
+  let { wallet, market, coin } = context;
+  await coin.methods.approve(market.options.address, book.price).send({from:wallet.account});
+  await market.methods.buy(book.bookId).send({from:wallet.account});
 }

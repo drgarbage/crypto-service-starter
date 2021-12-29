@@ -2,7 +2,7 @@ import { Button, Card, CardActions, CardContent, CardMedia, IconButton, Typograp
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Web3 from 'web3';
 
-export const NftCard = ({book}) => 
+export const NftCard = ({book, onPurchase, onFavorite}) => 
   <Card sx={{m:2}}>
     <CardMedia 
       component="img" 
@@ -20,7 +20,7 @@ export const NftCard = ({book}) =>
       }
     </CardContent>
     <CardActions sx={{display: 'flex', justifyContent: 'space-between'}}>
-      <Button>Buy now</Button>
-      <IconButton><FavoriteBorderIcon /></IconButton>
+      <Button onClick={onPurchase}>Buy now</Button>
+      <IconButton onClick={onFavorite}><FavoriteBorderIcon /></IconButton>
     </CardActions>
   </Card>;
