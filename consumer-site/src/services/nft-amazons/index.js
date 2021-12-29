@@ -27,7 +27,6 @@ export const publish = async (context, image, meta) => {
   let tokenId = events.Transfer.returnValues.tokenId;
     
   meta.tokenId = tokenId;
-  
   // upload image
   let snapImg = await firebase
     .storage()
@@ -44,4 +43,17 @@ export const publish = async (context, image, meta) => {
     .set(meta, {merge:true});
 
   return meta;
+}
+
+export const publishAndBook = async (context, image, meta, price) => {
+  let { wallet, web3, contract, marketContract} = context;
+
+  let publishedMeta = await publish(context, image, meta);
+  await contract.methods.approve(marketContract.options.address, publishedMeta.tokenId)
+    .send({from:wallet.account});
+  let book = await marketContract.methods
+    .book(contract.options.address, publishedMeta.tokenId, web3.utils.toWei(price))
+    .send({from:wallet.account});
+  
+  return book;
 }

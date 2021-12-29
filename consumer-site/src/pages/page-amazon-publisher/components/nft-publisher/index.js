@@ -9,6 +9,7 @@ export const NftPublisher = ({onSubmit}) => {
     name: 'Amazons',
     description: 'Female warrior Amazons'
   });
+  const [price, setPrice] = useState(0);
   const [image, setImage] = useState(null);
   
   const onMeta = (updates) =>
@@ -16,7 +17,7 @@ export const NftPublisher = ({onSubmit}) => {
 
   const onPublish = () => {
     if(!onSubmit) return;
-    onSubmit({image, meta});
+    onSubmit({image, meta, price});
   }
 
   return (
@@ -33,6 +34,9 @@ export const NftPublisher = ({onSubmit}) => {
           <TextField fullWidth label="description" type="text"
             onChange={e => onMeta({description:e.target.value})}
             value={meta.description} />
+          <TextField fullWidth label="price" type="number"
+            onChange={e => setPrice(e.target.value)}
+            value={price} />
         </form>
       </CardContent>
       <CardActions>
