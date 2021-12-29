@@ -24,6 +24,8 @@ contract NftBase is
   constructor(string memory name, string memory symbol, string memory uri) ERC721(name, symbol) {
     _tokenBaseURI = uri;
     _latestTokenID = 0;
+    _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    _setupRole(MINTER_ROLE, msg.sender);
   }
 
   function exists(uint256 tokenId) public view returns (bool) {

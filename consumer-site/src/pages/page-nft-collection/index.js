@@ -1,4 +1,4 @@
-import React, { useReducer, useMemo, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { useWeb3, useContract } from "../../components/hooks";
 import { PageBase } from "../../components/page-base";
 import { Section } from "../../components/section";

@@ -2,9 +2,14 @@ import { useMemo } from 'react';
 import { useWallet } from 'use-wallet';
 import Web3 from 'web3';
 
+export const useWeb3 = () => {
+  const web3 = useMemo(() => new Web3(Web3.givenProvider), [Web3.givenProvider]);
+  return web3;
+}
+
 export const useContract = (artifacts) => {
   const wallet = useWallet();
-  const web3 = useMemo(() => new Web3(Web3.givenProvider), [Web3.givenProvider]);
+  const web3 = useWeb3();
   const contract = useMemo(() => {
     if(!web3 || !wallet) return null;
     
@@ -17,5 +22,5 @@ export const useContract = (artifacts) => {
     let contract = new web3.eth.Contract(abi, address);
     return contract;
   }, [wallet, artifacts, web3]);
-  return {web3, contract};
+  return contract;
 } 

@@ -43,7 +43,7 @@ function App() {
 
 export default () => (
   <UseWalletProvider
-    chainId={5777}>
+    chainId={process.env.REACT_APP_CHAIN_ID}>
     <App />
   </UseWalletProvider>
 );

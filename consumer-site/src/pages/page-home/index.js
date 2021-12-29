@@ -7,7 +7,7 @@ import {
   List, ListItem, ListItemText, CardActions, CardMedia 
 } from "@mui/material";
 import { useWallet } from "use-wallet";
-import { useContract } from '../../components/hooks';
+import { useWeb3, useContract } from '../../components/hooks';
 import { useEffect } from "react";
 import MainCoin from '../../contracts/MainCoin.json';
 import MainPool from '../../contracts/MainPool.json';
@@ -25,8 +25,9 @@ const NftCard = ({sx}) =>
 
 export const PageHome = () => {
   const wallet = useWallet();
-  const { web3, contract: contractCoin } = useContract(MainCoin);
-  const { contract: contractPool } = useContract(MainPool);
+  const web3 = useWeb3();
+  const contractCoin = useContract(MainCoin);
+  const contractPool = useContract(MainPool);
   const [ stakingInfo, setStakingInfo ] = useState({staked: '0', earned: '0'});
   const stake = useCallback(async () => {
     try{
