@@ -32,9 +32,15 @@ function App() {
         <Routes>
           <Route path="/" element={<PageHome />} />
           <Route path="/game" element={<PageGameHome />} />
-          <Route path="/nft" element={<PageNftHome />} />
-          <Route path="/nft-amazon" element={<PageAmazonPublisher />} />
+          <Route path="/nft-collection/create" />
+          <Route path="/nft-collection/:contract/mint" element={<PageAmazonPublisher />} />
+          <Route path="/nft-collection/:contract/:tokenId" />
+          <Route path="/nft-collection/:contract" />
+          {/* Deprecated */} <Route path="/nft-amazon" element={<PageAmazonPublisher />} />
+          {/* Deprecated */} <Route path="/nft" element={<PageNftHome />} />
+          <Route path="/nft-portal" element={<PageNftHome />} />
           <Route path="/admin" element={<PageAdmin />} />
+          
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
